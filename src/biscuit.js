@@ -79,7 +79,7 @@
                         biscuit.remove();
                     }, false);
                                         
-                    if (this.options.hideOnScroll) {
+                    if (biscuit.options.hideOnScroll) {
                         var initialScroll;
 
                         biscuit.event.add(window, 'scroll', function cookieScroll() {
