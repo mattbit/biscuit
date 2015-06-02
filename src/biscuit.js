@@ -73,7 +73,7 @@
 
                 if (!cookie) {
 
-                    biscuit.insert();
+                    biscuit.show();
 
                     biscuit.event.add(document.getElementById('cookie-banner-close'), 'click', function() {
                         biscuit.remove();
@@ -99,7 +99,7 @@
         );
     }
 
-    Biscuit.prototype.insert = function() {
+    Biscuit.prototype.show = function() {
         var html = '<div id="cookie-banner"><div id="cookie-banner-container">' +
                    '<p>' + this.options.text + ' <a href="' + this.options.link + '">' + this.options.link_text + '</a>.</p>' +
                    '<button id="cookie-banner-close">&#x2715;</button>' +
