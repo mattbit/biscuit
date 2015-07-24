@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>Biscuit demo</title>
+    </head>
+
+    <body>
+        
+        <script src="../dist/biscuit.min.js"></script>
+        <script>
+            Biscuit.init({
+                text: "My custom text",
+                closeButtonId: "close",
+                containerId: "custom-banner",
+                template: '<div id="custom-banner"><p>{{ text }}</p><button id="close">Close!</button></div>'
+            });
+        </script>
+    </body>
+
+</html>

@@ -20,9 +20,15 @@ Then initialize the banner:
         text: "This website uses cookies ;)",
         link: "/cookie-policy",
         link_text: "More info",
-        hideOnScroll: true
+        close_text: '&#x2715;', // The close button text
+        hideOnScroll: true,
+        template: '<div id="cookie-banner">{{ text }} <button id="close-btn">{{ close_text }}</button></div>',
+        containerId: 'cookie-banner', // Adjust to your needs if you use a custom template
+        closeButtonId: 'close-btn' 
     });
 ```
+
+The variables available inside the template are `text`, `link`, `link_text`, `close_text`.
 
 You can also manually remove/insert the banner:
 
@@ -32,3 +38,7 @@ You can also manually remove/insert the banner:
     biscuit.remove(); // Removes the banner (and sets a cookie to remember the consent)
     biscuit.show(); // Shows the banner
 ``` 
+
+## To do
+
+- Write tests

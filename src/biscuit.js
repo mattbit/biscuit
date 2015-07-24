@@ -16,7 +16,15 @@
             text: 'This website uses cookies to ensure you get the best experience.',
             link_text: 'More info',
             link: '/privacy',
-            hideOnScroll: true
+            close_text: '&#x2715;',
+            hideOnScroll: true,
+            template: '<div id="cookie-banner"><div id="cookie-banner-container">' +
+                      '<p>{{ text }} <a href="{{ link }}">{{ link_text }}</a>.</p>' +
+                      '<button id="cookie-banner-close">{{ close_text }}</button>' +
+                      '</div></div>',
+            closeButtonId: 'cookie-banner-close',
+            containerId: 'cookie-banner',
+            bannerId: ''
         };
 
         for (var attr in options) {
@@ -66,6 +74,16 @@
             }
         };
 
+        this.template = {
+            parse: function (template, variables) {
+                for (var varname in variables) {
+                    template = template.replace(new RegExp('{{\\s?' + varname + '\\s?}}', 'g'), variables[varname]);
+                }
+                
+                return template;
+            }
+        };
+
         var cookie = this.cookie.read(this.options.cookie);
         var biscuit = this;
 
@@ -75,7 +93,7 @@
 
                     biscuit.show();
 
-                    biscuit.event.add(document.getElementById('cookie-banner-close'), 'click', function() {
+                    biscuit.event.add(document.getElementById(biscuit.options.closeButtonId), 'click', function() {
                         biscuit.remove();
                     }, false);
                                         
@@ -100,14 +118,17 @@
     }
 
     Biscuit.prototype.show = function() {
-        var html = '<div id="cookie-banner"><div id="cookie-banner-container">' +
-                   '<p>' + this.options.text + ' <a href="' + this.options.link + '">' + this.options.link_text + '</a>.</p>' +
-                   '<button id="cookie-banner-close">&#x2715;</button>' +
-                   '</div></div>';
+
+        var html = this.template.parse(this.options.template, {
+            text: this.options.text,
+            link: this.options.link,
+            link_text: this.options.link_text,
+            close_text: this.options.close_text
+        });
 
         document.body.insertAdjacentHTML('afterbegin', html);
 
-        var cookieBanner = document.getElementById('cookie-banner');
+        var cookieBanner = document.getElementById(this.options.containerId);
         cookieBanner.className = 'show';
     };
 
@@ -116,7 +137,7 @@
 
         this.cookie.create(this.options.cookie, '1', this.options.remember);
 
-        var cookieBanner = document.getElementById('cookie-banner');
+        var cookieBanner = document.getElementById(this.options.containerId);
         
         cookieBanner.className = '';
         setTimeout(function () {
