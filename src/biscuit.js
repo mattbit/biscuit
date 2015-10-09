@@ -24,7 +24,8 @@
                       '</div></div>',
             closeButtonId: 'cookie-banner-close',
             containerId: 'cookie-banner',
-            bannerId: ''
+            bannerId: '',
+            delay: 0
         };
 
         for (var attr in options) {
@@ -132,17 +133,15 @@
         cookieBanner.className = 'show';
     };
 
-    Biscuit.prototype.remove = function(delay) {
-        if (typeof delay === 'undefined') { delay = 0; }
-
+    Biscuit.prototype.remove = function() {
         this.cookie.create(this.options.cookie, '1', this.options.remember);
 
         var cookieBanner = document.getElementById(this.options.containerId);
         
-        cookieBanner.className = '';
+        cookieBanner.className = 'removing';
         setTimeout(function () {
                 cookieBanner.remove();
-        }, delay);
+        }, this.options.delay);
     };
 
     Biscuit.init = function(options) {
