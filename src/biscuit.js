@@ -84,38 +84,44 @@
             }
         };
 
-        var cookie = this.cookie.read(this.options.cookie);
+        if (!this.cookie.read(this.options.cookie)) {
+            var biscuit = this;
+
+            if (document.readyState == "complete" || document.readyState == "loaded") {
+                biscuit.initialize();
+            } else {
+                this.event.add(document, 'DOMContentLoaded', function() {
+                    biscuit.initialize()
+                });
+            }
+        }
+    }
+
+    Biscuit.prototype.initialize = function() {
         var biscuit = this;
 
-        this.event.add(document, 'DOMContentLoaded', function() {
+        biscuit.show();
 
-                if (!cookie) {
-
-                    biscuit.show();
-
-                    biscuit.event.add(document.getElementById(biscuit.options.closeButtonId), 'click', function() {
-                        biscuit.remove();
-                    }, false);
-                                        
-                    if (biscuit.options.hideOnScroll) {
-                        var initialScroll;
-
-                        biscuit.event.add(window, 'scroll', function cookieScroll() {
+        biscuit.event.add(document.getElementById(this.options.closeButtonId), 'click', function() {
+            biscuit.remove();
+        }, false);
                             
-                            if (!initialScroll) {
-                                initialScroll = window.scrollY;
-                            }
+        if (biscuit.options.hideOnScroll) {
+            var initialScroll;
 
-                            if (window.scrollY > initialScroll + 200 || window.scrollY < initialScroll - 200) {
-                                biscuit.remove(1000);
-                                biscuit.event.remove(window, 'scroll', cookieScroll);
-                            }
-                        }, false);
-                    }
+            biscuit.event.add(window, 'scroll', function cookieScroll() {
+                
+                if (!initialScroll) {
+                    initialScroll = window.scrollY;
                 }
-            }
-        );
-    }
+
+                if (window.scrollY > initialScroll + 200 || window.scrollY < initialScroll - 200) {
+                    this.remove(1000);
+                    this.event.remove(window, 'scroll', cookieScroll);
+                }
+            }, false);
+        }
+    };
 
     Biscuit.prototype.show = function() {
 
