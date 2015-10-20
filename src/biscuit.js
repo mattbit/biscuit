@@ -24,7 +24,6 @@
                       '</div></div>',
             closeButtonId: 'cookie-banner-close',
             containerId: 'cookie-banner',
-            bannerId: '',
             delay: 0
         };
 
