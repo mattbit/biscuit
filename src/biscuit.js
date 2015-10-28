@@ -16,7 +16,7 @@
             text: 'This website uses cookies to ensure you get the best experience.',
             link_text: 'More info',
             link: '/privacy',
-            close_text: '&#x2715;',
+            close_text: '&times;',
             hideOnScroll: true,
             template: '<div id="cookie-banner"><div id="cookie-banner-container">' +
                       '<p>{{ text }} <a href="{{ link }}">{{ link_text }}</a>.</p>' +
@@ -24,7 +24,9 @@
                       '</div></div>',
             closeButtonId: 'cookie-banner-close',
             containerId: 'cookie-banner',
-            delay: 0
+            delay: 0,
+            onShow: function() {},
+            onRemove: function() {}
         };
 
         for (var attr in options) {
@@ -87,11 +89,11 @@
         if (!this.cookie.read(this.options.cookie)) {
             var biscuit = this;
 
-            if (document.readyState == "complete" || document.readyState == "loaded") {
+            if (document.readyState === "interactive" || document.readyState === "complete" || document.readyState === "loaded") {
                 biscuit.initialize();
             } else {
                 this.event.add(document, 'DOMContentLoaded', function() {
-                    biscuit.initialize()
+                    biscuit.initialize();
                 });
             }
         }
@@ -116,14 +118,15 @@
                 }
 
                 if (window.scrollY > initialScroll + 200 || window.scrollY < initialScroll - 200) {
-                    this.remove(1000);
-                    this.event.remove(window, 'scroll', cookieScroll);
+                    biscuit.remove();
+                    biscuit.event.remove(window, 'scroll', cookieScroll);
                 }
             }, false);
         }
     };
 
     Biscuit.prototype.show = function() {
+        this.options.onShow(this);
 
         var html = this.template.parse(this.options.template, {
             text: this.options.text,
@@ -139,6 +142,8 @@
     };
 
     Biscuit.prototype.remove = function() {
+        this.options.onRemove(this);
+
         this.cookie.create(this.options.cookie, '1', this.options.remember);
 
         var cookieBanner = document.getElementById(this.options.containerId);
